@@ -9,12 +9,9 @@ CREATE TABLE `school`.`students` (
 INSERT INTO `students`(ID, name, city) VALUES 
 (1, 'Véronique', 'Paris'),
 (2, 'Steeven', 'Lyon'),
-(3, 'Marc', 'Marseille')
-INSERT INTO `students`(ID, name, city) VALUES 
-(4, 'Nour', 'Lyon')
-INSERT INTO `students`(ID, name, city) VALUES 
-(5, 'Romain', 'Paris')
-INSERT INTO `students`(ID, name, city) VALUES 
+(3, 'Marc', 'Marseille'),
+(4, 'Nour', 'Lyon'),
+(5, 'Romain', 'Paris'),
 (6, 'Sophie', 'Paris')
 
 
@@ -109,11 +106,11 @@ JOIN favorites ON students.ID = favorites.student_id
 WHERE favorites.class='Music'
 
 SELECT `name` FROM `students` 
-JOIN `favorites` ON students.ID=favorites.ID 
+JOIN `favorites` ON students.ID=favorites.student_id 
 WHERE favorites.sport='Tennis'
 
 SELECT `name` FROM `students` 
-JOIN `favorites` ON students.ID=favorites.ID 
+JOIN `favorites` ON students.ID=favorites.student_id 
 WHERE favorites.class='Arts'
 
 SELECT COUNT(*) FROM `students` 
@@ -122,20 +119,23 @@ WHERE students.city='Paris'
 
 /* RAPPORT LVL 3 */
 
-SELECT students.*, languages.name 
-FROM `students` 
-JOIN `languages` ON students.ID=languages.ID 
+SELECT students.*, languages.name
+FROM students 
+JOIN students_languages ON students.ID=students_languages.student_id 
+JOIN languages ON languages.ID=students_languages.language_id 
 WHERE students.ID=1
 
-SELECT students.*, languages.name 
-FROM `students` 
-JOIN `languages` ON students.ID=languages.ID 
+SELECT students.*, languages.name
+FROM students 
+JOIN students_languages ON students.ID=students_languages.student_id 
+JOIN languages ON languages.ID=students_languages.language_id 
 WHERE students.ID=4
 
-SELECT languages.name, students.name 
-FROM `students` 
-JOIN `languages` ON students.ID=languages.ID 
-WHERE students.ID=5
+SELECT students.name, languages.name 
+FROM students 
+JOIN students_languages ON students.ID = students_languages.student_id 
+JOIN languages ON languages.ID = students_languages.language_id 
+WHERE students.ID = 5
 
 SELECT students.name, COUNT(students_languages.language_id) as 'total' 
 FROM students 
@@ -158,4 +158,7 @@ WHERE students.city LIKE '%i%'
 
 
 /* essai lvl2 part 4 */
-SELECT * FROM students JOIN favorites ON students.ID = favorites.student_id JOIN students_languages ON students.ID = students_languages.student_id JOIN languages ON languages.ID = students_languages.language_id WHERE favorites.class='Music'
+SELECT * FROM students 
+JOIN favorites ON students.ID = favorites.student_id 
+JOIN students_languages ON students.ID = students_languages.student_id 
+JOIN languages ON languages.ID = students_languages.language_id WHERE favorites.class='Music'
